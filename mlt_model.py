@@ -96,7 +96,6 @@ class mltask(nn.Module):
         self.net1 = Attention_2(in_channels, out_channels)
         self.net2 = net2_2(out_channels)
         self.weights = nn.Parameter(torch.ones(6).float())
-        # self.net2 = Conv_Res_LOS(in_channels)
 
     def forward(self, x, args):
         y = self.net1(x)
@@ -106,15 +105,8 @@ class mltask(nn.Module):
             y = self.net2(y.detach())
         return y
 
-"""    def forward(self, x):
-        y = self.net1(x)
 
-        y = self.net2(y)
-        
-        return y
-    
-    def get_last_shared_layer(self):
-        return self.net1"""
+
 
 
 class net1(nn.Module):
@@ -290,16 +282,10 @@ class Attention_2(nn.Module):
         x1 = self.Convv1(x)
         x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.attention(x1)
         x1 = x1 + x
         x1 = self.Convv1(x1)
-        # x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.Convv(x1)
         x1 = x1 + x
-        # x1 = self.Convv(x1)
-
-        # x1 = x1 + x
         return self.final(x1)
 
 class Attention_3(nn.Module):
@@ -319,51 +305,14 @@ class Attention_3(nn.Module):
 
     def forward(self, x):
         x1 = self.Convv1(x)
-        # x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.attention(x1)
         x1 = x1 + x
         x1 = self.Convv1(x1)
-        # x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.Convv(x1)
-        x1 = x1 + x
-        # x1 = self.Convv(x1)
-        # x1 = x1 + x
-        x1 = self.final(x1)
-        return self.attention(x1)
-
-
-
-    def __init__(self, in_channels, out_channels):
-        super(Attention_4, self).__init__()
-
-        self.Up_Convv = nn.Sequential(
-            nn.Conv2d(in_channels, 64, kernel_size=(3, 3), padding=1),
-            nn.ReLU()
-        )
-
-        self.Down_Convv = nn.Sequential(
-            nn.Conv2d(64, in_channels, kernel_size=(3, 3), padding=1),
-            nn.ReLU()
-        )
-
-        self.attention = SKAttention(channel=64, reduction=7)
-        self.final = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=1)
-
-    def forward(self, x):
-        x1 = self.Up_Convv(x)
-        
-        x1 = self.Down_Convv(x1)
-        
-        x1 = x1 + x
-        x1 = self.Up_Convv(x1)
-        
-        x1 = self.Down_Convv(x1)
-        
         x1 = x1 + x
         x1 = self.final(x1)
         return self.attention(x1)
+
 
 class Attention_4(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -384,16 +333,10 @@ class Attention_4(nn.Module):
         x1 = self.Convv1(x)
         x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.attention(x1)
         x2 = x1 + x
         x1 = self.Convv1(x2)
-        # x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.Convv(x1)
         x1 = x1 + x2
-        # x1 = self.Convv(x1)
-
-        # x1 = x1 + x
         return self.final(x1)
 
 class Instead(nn.Module):
@@ -414,17 +357,12 @@ class Instead(nn.Module):
 
     def forward(self, x):
         x1 = self.Convv1(x)
-        # x1 = self.attention(x1)
         x1 = self.instead(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.attention(x1)
         x1 = x1 + x
         x1 = self.Convv1(x1)
-        # x1 = self.attention(x1)
         x1 = self.Convv2(x1)
-        # x1 = self.Convv(x1)
         x1 = x1 + x
-        # x1 = self.Convv(x1)
         return self.final(x1)
 
 class net2(nn.Module):
@@ -512,11 +450,16 @@ class net2_2(nn.Module):
         self.sfmx = nn.Softmax(dim=1)
 
     def forward(self, x):
-        thephi = self.thetaphi(x)  # out_channel = 2
-        poweratio = self.poweratio(x)  # out_channel = 1
-        power = self.power(x)  # out_channel = 1
-        delay = self.delay(x)  # out_channel = 1
-        los = - torch.log(self.sfmx(self.losn(x)))  # out_channel = 1
+        # out_channel = 2
+        thephi = self.thetaphi(x)
+        # out_channel = 1
+        poweratio = self.poweratio(x)
+        # out_channel = 1
+        power = self.power(x)
+        # out_channel = 1
+        delay = self.delay(x)
+        # out_channel = 3
+        los = - torch.log(self.sfmx(self.losn(x)))
         return thephi, poweratio, power, delay, los
 
 class backbone(nn.Module):
@@ -562,12 +505,10 @@ class backbone(nn.Module):
         low_feature = self.transfer(low_feature)  # 64
 
         feature_up = self.attention(high_feature + low_feature)  # 64
-        # feature_up = high_feature +  low_feature
-        # feature_down = self.attention(low_feature)     # 64
 
         feature = self.reshape(feature_up )  # 7
         
-        feature = feature + input  # 7   # 这里的feature_UP要改回feature
+        feature = feature + input  # 7
 
         feature = self.transfer(feature)  # 64
 
