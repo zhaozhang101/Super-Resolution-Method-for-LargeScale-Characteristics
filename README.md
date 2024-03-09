@@ -10,14 +10,15 @@ The advantages of the proposed model are demonstrated in comparisons with other 
 The ablation study also proved the necessity of multi-task learning and techniques in model design.
 ![banner](./Image/diffea.png)
 ### Our contribution
+![banner](./Image/all.png)
 In dense urban areas, RT simulation by self-developed CloudRT was conducted and channel characteristics datasets are constructed based on simulation results.
 A residual network based MTL SR model is proposed. Weighted masks are added in the loss function. Homoscedic uncertainty is employed to balance the single-task losses during training. 
 Residual connection and iterative up-and-down techniques are implemented in CNN blocks for better SR performances.
 Training process and results of evaluation are provided. The proposed SR approach generally performs better than other state-of-the-art DL models. 
 Comparing with baseline, the proposed approach could achieve very good SR results in all channel characteristics targets and deteriorate significantly less 
 than baseline with larger scale factor. Ablation study proved that the techniques in training and model design are necessary.
+![banner](./Image/GIF2.gif)
 
-## 
 
 ## Usage
 Users can download the code above, we especially recommend downloading zip to develop the project.
