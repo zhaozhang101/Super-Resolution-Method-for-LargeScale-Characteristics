@@ -1,4 +1,5 @@
 # Super Resolution method for large scale characteristics
+![banner](./Image/GIF.gif)
 ## Background
 ### Present
 Traditional approaches like stochastic channel modeling and ray-tracing (RT) based channel modeling depend heavily on measurement data or simulation, 
@@ -7,6 +8,7 @@ The model is based on multi-task learning (MTL) convolutional neural networks (C
 SR model could achieve excellent performances in mean absolute error and standard deviation of error. 
 The advantages of the proposed model are demonstrated in comparisons with other state-of-the-art deep learning models. 
 The ablation study also proved the necessity of multi-task learning and techniques in model design.
+![banner](./Image/diffea.png)
 ### Our contribution
 In dense urban areas, RT simulation by self-developed CloudRT was conducted and channel characteristics datasets are constructed based on simulation results.
 A residual network based MTL SR model is proposed. Weighted masks are added in the loss function. Homoscedic uncertainty is employed to balance the single-task losses during training. 
